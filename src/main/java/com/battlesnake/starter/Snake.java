@@ -104,8 +104,8 @@ public class Snake {
         public Map<String, String> index() {
             Map<String, String> response = new HashMap<>();
             response.put("apiversion", "1");
-            response.put("hectorvee", ""); // TODO: Your Battlesnake Username
-            response.put("color", "#229799"); // TODO: Personalize
+            response.put("hectorvee", "");
+            response.put("color", "#229799");
             response.put("head", "default"); // TODO: Personalize
             response.put("tail", "default"); // TODO: Personalize
             return response;
@@ -164,24 +164,20 @@ public class Snake {
 
             ArrayList<String> possibleMoves = new ArrayList<>(Arrays.asList("up", "down", "left", "right"));
 
-            // Don't allow your Battlesnake to move back in on it's own neck
+            // Don't allow your Battlesnake to move back in on its own neck
             avoidMyNeck(head, body, possibleMoves);
 
-            // TODO: Using information from 'moveRequest', find the edges of the board and
-            // don't
-            // let your Battlesnake move beyond them board_height = ? board_width = ?
+            // TODO: Using information from 'moveRequest', find the edges of the board and don't let your
+            //  Battlesnake move beyond them board_height = ? board_width = ?
 
-            // TODO Using information from 'moveRequest', don't let your Battlesnake pick a
-            // move
-            // that would hit its own body
+            // TODO Using information from 'moveRequest', don't let your Battlesnake pick a move that would
+            //  hit its own body
 
-            // TODO: Using information from 'moveRequest', don't let your Battlesnake pick a
-            // move
-            // that would collide with another Battlesnake
+            // TODO: Using information from 'moveRequest', don't let your Battlesnake pick a move that would
+            //  collide with another Battlesnake
 
-            // TODO: Using information from 'moveRequest', make your Battlesnake move
-            // towards a
-            // piece of food on the board
+            // TODO: Using information from 'moveRequest', make your Battlesnake move towards a piece of food
+            //  on the board
 
             // Choose a random direction to move in
             final int choice = new Random().nextInt(possibleMoves.size());
