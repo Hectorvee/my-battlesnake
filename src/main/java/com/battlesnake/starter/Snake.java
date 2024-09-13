@@ -28,6 +28,10 @@ public class Snake {
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
     private static final Handler HANDLER = new Handler();
     private static final Logger LOG = LoggerFactory.getLogger(Snake.class);
+    private static final int FOOD = 1;
+    private static final int SNAKE_HEAD = 2;
+    private static final int SNAKE_BODY = 3;
+    private static final int SNAKE_TAIL = 4;
 
     /**
      * Main entry point.
@@ -167,6 +171,17 @@ public class Snake {
             // Don't allow your Battlesnake to move back in on its own neck
             avoidMyNeck(head, body, possibleMoves);
 
+            int row = moveRequest.get("board").get("height").asInt();
+            int col = moveRequest.get("board").get("width").asInt();
+            int[][] board = initializeBoard(row, col, moveRequest);
+            // Print the board
+            for (int[] r: board) {
+                for (int c: r) {
+                    System.out.print(c + " ");
+                }
+                System.out.println();
+            }
+
             // TODO: Using information from 'moveRequest', find the edges of the board and don't let your
             //  Battlesnake move beyond them board_height = ? board_width = ?
 
@@ -227,6 +242,33 @@ public class Snake {
             LOG.info("END");
             return EMPTY;
         }
+    }
+
+    /**
+     * Initialize the board with food and snake positions
+     *
+     * @param row         the height of the board
+     * @param col         the width of the board
+     * @param moveRequest the JSON data map containing the information about the game
+     *                    that is about to be played.
+     * @return a 2D array representing the board
+     */
+    public static int[][] initializeBoard(int row, int col, JsonNode moveRequest) {
+        int[][] board = new int[row][col];
+        JsonNode food = moveRequest.get("board").get("food");   // food is an array of objects
+        for (JsonNode f : food) {
+            board[f.get("y").asInt()][f.get("x").asInt()] = FOOD;
+        }
+
+        JsonNode snakes = moveRequest.get("board").get("snakes");   // snakes is an array of objects
+        for (JsonNode snake: snakes) {
+            board[snake.get("head").get("y").asInt()][snake.get("head").get("x").asInt()] = SNAKE_HEAD;
+            for (JsonNode body: snake.get("body")) {
+                board[body.get("y").asInt()][body.get("y").asInt()] = SNAKE_BODY;
+            }
+        }
+
+        return board;
     }
 
 }
