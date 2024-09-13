@@ -31,7 +31,8 @@ public class Snake {
     private static final int FOOD = 1;
     private static final int SNAKE_HEAD = 2;
     private static final int SNAKE_BODY = 3;
-    private static final int SNAKE_TAIL = 4;
+    private static final int MY_SNAKE_HEAD = 5;
+    private static final int MY_SNAKE_BODY = 6;
 
     /**
      * Main entry point.
@@ -261,10 +262,14 @@ public class Snake {
         }
 
         JsonNode snakes = moveRequest.get("board").get("snakes");   // snakes is an array of objects
+        String mySnakeId = moveRequest.get("you").get("id").asText();
         for (JsonNode snake: snakes) {
-            board[snake.get("head").get("y").asInt()][snake.get("head").get("x").asInt()] = SNAKE_HEAD;
+            int headValue = snake.get("id").asText().equals(mySnakeId) ? MY_SNAKE_HEAD : SNAKE_HEAD;
+            int bodyValue = snake.get("id").asText().equals(mySnakeId) ? MY_SNAKE_BODY : SNAKE_BODY;
+
+            board[snake.get("head").get("y").asInt()][snake.get("head").get("x").asInt()] = headValue;
             for (JsonNode body: snake.get("body")) {
-                board[body.get("y").asInt()][body.get("y").asInt()] = SNAKE_BODY;
+                board[body.get("y").asInt()][body.get("x").asInt()] = bodyValue;
             }
         }
 
