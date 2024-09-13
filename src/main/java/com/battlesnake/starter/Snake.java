@@ -303,7 +303,7 @@ public class Snake {
             possibleMoves.remove("down");
         }
 
-        if (ySnakeHead+1<0) {
+        if (ySnakeHead-1<0) {
             possibleMoves.remove("up");
         }
     }
