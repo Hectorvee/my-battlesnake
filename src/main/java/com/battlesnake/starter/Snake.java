@@ -176,15 +176,16 @@ public class Snake {
             int col = moveRequest.get("board").get("width").asInt();
             int[][] board = initializeBoard(row, col, moveRequest);
             // Print the board
-            for (int[] r: board) {
-                for (int c: r) {
-                    System.out.print(c + " ");
-                }
-                System.out.println();
-            }
+//            for (int[] r: board) {
+//                for (int c: r) {
+//                    System.out.print(c + " ");
+//                }
+//                System.out.println();
+//            }
 
             // TODO: Using information from 'moveRequest', find the edges of the board and don't let your
             //  Battlesnake move beyond them board_height = ? board_width = ?
+            avoidTheWalls(moveRequest, possibleMoves, row, col);
 
             // TODO Using information from 'moveRequest', don't let your Battlesnake pick a move that would
             //  hit its own body
@@ -254,7 +255,7 @@ public class Snake {
      *                    that is about to be played.
      * @return a 2D array representing the board
      */
-    public static int[][] initializeBoard(int row, int col, JsonNode moveRequest) {
+    private static int[][] initializeBoard(int row, int col, JsonNode moveRequest) {
         int[][] board = new int[row][col];
         JsonNode food = moveRequest.get("board").get("food");   // food is an array of objects
         for (JsonNode f : food) {
@@ -274,6 +275,38 @@ public class Snake {
         }
 
         return board;
+    }
+
+    /**
+     * Avoid the walls
+     *
+     * @param board        the 2D array representing the board
+     * @param moveRequest  the JSON data map containing the information about the game
+     *                     that is about to be played.
+     * @param possibleMoves the list of possible moves
+     * @param row          the height of the board
+     * @param col          the width of the board
+     */
+    private static void avoidTheWalls(JsonNode moveRequest, ArrayList<String> possibleMoves, int row, int col) {
+
+        int xSnakeHead = moveRequest.get("you").get("head").get("x").asInt();
+        int ySnakeHead = moveRequest.get("you").get("head").get("y").asInt();
+
+        if (xSnakeHead+1>col) {
+            possibleMoves.remove("right");
+        }
+
+        if (xSnakeHead-1<col) {
+            possibleMoves.remove("left");
+        }
+
+        if (ySnakeHead+1>row) {
+            possibleMoves.remove("down");
+        }
+
+        if (ySnakeHead+1<row) {
+            possibleMoves.remove("up");
+        }
     }
 
 }
