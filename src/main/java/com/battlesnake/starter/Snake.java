@@ -187,8 +187,9 @@ public class Snake {
             //  Battlesnake move beyond them board_height = ? board_width = ?
             avoidTheWalls(moveRequest, possibleMoves, row, col);
 
-            // TODO Using information from 'moveRequest', don't let your Battlesnake pick a move that would
+            // TODO: Using information from 'moveRequest', don't let your Battlesnake pick a move that would
             //  hit its own body
+            avoidSnakeBody(moveRequest, board, possibleMoves);
 
             // TODO: Using information from 'moveRequest', don't let your Battlesnake pick a move that would
             //  collide with another Battlesnake
@@ -287,7 +288,7 @@ public class Snake {
      * @param col          the width of the board
      */
     private static void avoidTheWalls(JsonNode moveRequest, ArrayList<String> possibleMoves, int row, int col) {
-        // TODO: Fix the logic here
+
         int xSnakeHead = moveRequest.get("you").get("head").get("x").asInt();
         int ySnakeHead = moveRequest.get("you").get("head").get("y").asInt();
 
@@ -304,6 +305,27 @@ public class Snake {
         }
 
         if (ySnakeHead-1<0) {
+            possibleMoves.remove("up");
+        }
+    }
+
+    private static void avoidSnakeBody(JsonNode moveRequest, int[][] board, ArrayList<String> possibleMoves) {
+        int xSnakeHead = moveRequest.get("you").get("head").get("x").asInt();
+        int ySnakeHead = moveRequest.get("you").get("head").get("y").asInt();
+
+        if (board[xSnakeHead+1][ySnakeHead] == SNAKE_BODY || board[xSnakeHead+1][ySnakeHead] == MY_SNAKE_BODY) {
+            possibleMoves.remove("right");
+        }
+
+        if (board[xSnakeHead-1][ySnakeHead] == SNAKE_BODY || board[xSnakeHead-1][ySnakeHead] == MY_SNAKE_BODY) {
+            possibleMoves.remove("left");
+        }
+
+        if (board[xSnakeHead][ySnakeHead+1] == SNAKE_BODY || board[xSnakeHead][ySnakeHead+1] == MY_SNAKE_BODY) {
+            possibleMoves.remove("down");
+        }
+
+        if (board[xSnakeHead][ySnakeHead-1] == SNAKE_BODY || board[xSnakeHead][ySnakeHead-1] == MY_SNAKE_BODY) {
             possibleMoves.remove("up");
         }
     }
