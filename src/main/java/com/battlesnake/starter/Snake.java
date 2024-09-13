@@ -280,7 +280,6 @@ public class Snake {
     /**
      * Avoid the walls
      *
-     * @param board        the 2D array representing the board
      * @param moveRequest  the JSON data map containing the information about the game
      *                     that is about to be played.
      * @param possibleMoves the list of possible moves
@@ -288,23 +287,23 @@ public class Snake {
      * @param col          the width of the board
      */
     private static void avoidTheWalls(JsonNode moveRequest, ArrayList<String> possibleMoves, int row, int col) {
-
+        // TODO: Fix the logic here
         int xSnakeHead = moveRequest.get("you").get("head").get("x").asInt();
         int ySnakeHead = moveRequest.get("you").get("head").get("y").asInt();
 
-        if (xSnakeHead+1>col) {
+        if (xSnakeHead+1==col) {
             possibleMoves.remove("right");
         }
 
-        if (xSnakeHead-1<col) {
+        if (xSnakeHead-1==col) {
             possibleMoves.remove("left");
         }
 
-        if (ySnakeHead+1>row) {
+        if (ySnakeHead+1==row) {
             possibleMoves.remove("down");
         }
 
-        if (ySnakeHead+1<row) {
+        if (ySnakeHead+1==row) {
             possibleMoves.remove("up");
         }
     }
