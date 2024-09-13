@@ -295,7 +295,7 @@ public class Snake {
             possibleMoves.remove("right");
         }
 
-        if (xSnakeHead-1==col) {
+        if (xSnakeHead-1<0) {
             possibleMoves.remove("left");
         }
 
@@ -303,7 +303,7 @@ public class Snake {
             possibleMoves.remove("down");
         }
 
-        if (ySnakeHead+1==row) {
+        if (ySnakeHead+1<0) {
             possibleMoves.remove("up");
         }
     }
