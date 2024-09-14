@@ -29,10 +29,10 @@ public class Snake {
     private static final Handler HANDLER = new Handler();
     private static final Logger LOG = LoggerFactory.getLogger(Snake.class);
     private static final int FOOD = 1;
-    private static final int SNAKE_HEAD = 2;
-    private static final int SNAKE_BODY = 3;
-    private static final int MY_SNAKE_HEAD = 5;
-    private static final int MY_SNAKE_BODY = 6;
+    private static final int MY_SNAKE_HEAD = 2;
+    private static final int SNAKE_HEAD = 3;
+    private static final int SNAKE_BODY = 4;
+    private static final int MY_SNAKE_BODY = 5;
 
     /**
      * Main entry point.
@@ -176,12 +176,12 @@ public class Snake {
             int col = moveRequest.get("board").get("width").asInt();
             int[][] board = initializeBoard(row, col, moveRequest);
             // Print the board
-//            for (int[] r: board) {
-//                for (int c: r) {
-//                    System.out.print(c + " ");
-//                }
-//                System.out.println();
-//            }
+            for (int[] r: board) {
+                for (int c: r) {
+                    System.out.print(c + " ");
+                }
+                System.out.println();
+            }
 
             // TODO: Using information from 'moveRequest', find the edges of the board and don't let your
             //  Battlesnake move beyond them board_height = ? board_width = ?
@@ -189,7 +189,7 @@ public class Snake {
 
             // TODO: Using information from 'moveRequest', don't let your Battlesnake pick a move that would
             //  hit its own body
-            avoidSnakeBody(moveRequest, board, possibleMoves);
+            avoidSnakeBody(moveRequest, board, possibleMoves, row, col);
 
             // TODO: Using information from 'moveRequest', don't let your Battlesnake pick a move that would
             //  collide with another Battlesnake
@@ -309,25 +309,47 @@ public class Snake {
         }
     }
 
-    private static void avoidSnakeBody(JsonNode moveRequest, int[][] board, ArrayList<String> possibleMoves) {
+    private static void avoidSnakeBody(JsonNode moveRequest, int[][] board, ArrayList<String> possibleMoves, int row, int col) {
         int xSnakeHead = moveRequest.get("you").get("head").get("x").asInt();
         int ySnakeHead = moveRequest.get("you").get("head").get("y").asInt();
 
-        if (board[xSnakeHead+1][ySnakeHead] == SNAKE_BODY || board[xSnakeHead+1][ySnakeHead] == MY_SNAKE_BODY) {
-            possibleMoves.remove("right");
+        for (String direction: possibleMoves) {
+            switch (direction) {
+                case "up":
+                    if (isValidMove(row, col, xSnakeHead, ySnakeHead - 1)) {
+                        if (board[xSnakeHead][ySnakeHead - 1] > 2) {
+                            possibleMoves.remove("up");
+                        }
+                    }
+                    break;
+                case "down":
+                    if (isValidMove(row, col, xSnakeHead, ySnakeHead + 1)) {
+                        if (board[xSnakeHead][ySnakeHead + 1] > 2) {
+                            possibleMoves.remove("down");
+                        }
+                    }
+                    break;
+                case "left":
+                    if (isValidMove(row, col, xSnakeHead, ySnakeHead)) {
+                        if (board[xSnakeHead - 1][ySnakeHead] > 2) {
+                            possibleMoves.remove("left");
+                        }
+                    }
+                    break;
+                case "right":
+                    if (isValidMove(row, col, xSnakeHead + 1, ySnakeHead)) {
+                        if (board[xSnakeHead + 1][ySnakeHead] > 2) {
+                            possibleMoves.remove("right");
+                        }
+                    }
+                    break;
+            }
         }
 
-        if (board[xSnakeHead-1][ySnakeHead] == SNAKE_BODY || board[xSnakeHead-1][ySnakeHead] == MY_SNAKE_BODY) {
-            possibleMoves.remove("left");
-        }
+    }
 
-        if (board[xSnakeHead][ySnakeHead+1] == SNAKE_BODY || board[xSnakeHead][ySnakeHead+1] == MY_SNAKE_BODY) {
-            possibleMoves.remove("down");
-        }
-
-        if (board[xSnakeHead][ySnakeHead-1] == SNAKE_BODY || board[xSnakeHead][ySnakeHead-1] == MY_SNAKE_BODY) {
-            possibleMoves.remove("up");
-        }
+    private static boolean isValidMove(int row, int col, int x, int y) {
+        return (x >= 0 && x < col) && (y >= 0 && y < row);
     }
 
 }
